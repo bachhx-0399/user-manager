@@ -4,17 +4,29 @@ import { IsEmail } from 'class-validator';
 
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
-  @Column()
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
   name: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    unique: true,
+    nullable: false,
+  })
   @IsEmail()
   email: string;
 
-  // Password
-  @Column()
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
   password: string;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: true, nullable: false })
   isActive: boolean;
+
+  @Column({ type: 'boolean', default: false, nullable: false })
+  isAdmin: boolean;
 }
