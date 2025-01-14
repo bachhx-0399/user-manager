@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { comparePasswords } from '../utils/hash';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,9 @@ export class AuthService {
       .createQueryBuilder()
       .where('"email" = :email', { email: username })
       .getOne();
-    if (user?.password !== pass) {
+    const passIsCorrect =
+      user && (await comparePasswords(pass, user.password));
+    if (!passIsCorrect) {
       throw new UnauthorizedException();
     }
 
